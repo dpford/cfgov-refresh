@@ -1,0 +1,79 @@
+{% extends "layout-1-3.html" %}
+
+{#
+    docs/sheer-layouts/layout-side-nav/
+
+    Since layout-side-nav.html extends from layout-1-3.html all we need to do
+    is set some side nav variables and override the `content_sidebar` block to
+    add the nav macro.
+#}
+
+
+
+{# Adding the side nav macro #}
+{% block content_sidebar %}
+    <nav class="nav-secondary expandable">
+    <h2 class="u-visually-hidden">Section navigation</h2>
+    <div class="expandable_header nav-secondary_header">
+        <button class="expandable_target nav-secondary_link nav-secondary_link__button">
+            <span class="expandable_header-left">
+                In this section
+            </span>
+            <span class="expandable_header-right">
+                <span class="expandable_cue-open">
+                    <span class="cf-icon cf-icon-down cf-icon__green"></span>
+                </span>
+                <span class="expandable_cue-close">
+                    <span class="cf-icon cf-icon-up cf-icon__green"></span>
+                </span>
+            </span>
+        </button>
+    </div>
+    <div class="expandable_content nav-secondary_content">
+        <ul class="nav-secondary_list">
+            {% set office_url = url('offices:office', kwargs={'office_id': office._id}) %}
+            {% set office_title = office.short_title|safe if office.short_title else office.title|safe %}
+            <li class="nav-secondary_item nav-secondary_item__parent">
+                {%- if is_active_nav(request, office_url)%}
+                    <a class="nav-secondary_link nav-secondary_link__current">
+                        {{ office_title|e }}
+                    </a>
+                {%- else -%}
+                    <a class="nav-secondary_link" href={{office_url}}>
+                        {{ office_title|e }}
+                    </a>
+                {% endif -%}
+            {%- for item in sub_pages | sort(attribute='order') %}
+                {% set this_url = url('offices:sub_page', kwargs={'office_id': office._id, 'subpage_id': item._id}) %}
+                {% set this_title = item.short_title|safe if item.short_title else item.title|safe %}
+                <ul class="nav-secondary_list">
+                    <li class="nav-secondary_item nav-secondary_item__child">
+                        {%- if is_active_nav(request, this_url) %}
+                            <a class="nav-secondary_link nav-secondary_link__current">
+                                {{ this_title|e }}
+                            </a>
+                        {%- else -%}
+                            <a class="nav-secondary_link" href="{{this_url}}">
+                                {{ this_title|e }}
+                            </a>
+                        {% endif -%}
+                    </li>
+                </ul>
+            {%- endfor %}
+            </li>
+        </ul>
+    </div>
+</nav>
+{% endblock %}
+
+{# Extra classes needed for .content_sidebar #}
+{% block content_sidebar_modifiers -%}
+    content__flush-all-on-small
+    {{ "content__half-top-on-desk" if breadcrumb_items | length > 0 }}
+{%- endblock %}
+
+{# Extra classes needed for .content_main #}
+{% block content_main_modifiers -%}
+    content__flush-top-on-small
+    {{ "content__half-top-on-desk" if breadcrumb_items | length > 0 }}
+{%- endblock %}

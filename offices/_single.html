@@ -1,5 +1,5 @@
-{% extends "layout-side-nav.html" %}
-{% import "_vars-offices.html" as vars with context %}
+{% extends "layout-side-nav-django.html" %}
+{% import "offices/_vars-offices.html" as vars with context %}
 
 {% block title -%}
     {{ office.title | safe if office.title }}
@@ -94,9 +94,6 @@
                     block
                     block__padded-top
                     block__border-top">
-        <h1 class="h2">
-            {{ resource_title }}
-        </h1>
         {% for resource in office.resources %}
             <div class="media office_resource
                         block__sub">
@@ -129,7 +126,7 @@
     </section>
     {% endif %}
 
-    {% for page in vars.sub_pages|sort(attribute='order') if page.show_in_office == "on" %}
+    {% for page in sub_pages|sort(attribute='order') if page.show_in_office == "on" %}
     {% if loop.first %}
     <section class="office_sub_pages
                     block
@@ -180,7 +177,7 @@
                     </p>
                     {% endif %}
                     {% if page.slug %}
-                    <a class="jump-link jump-link__right" href="{{ page.permalink }}">
+                    <a class="jump-link jump-link__right" href="{{ url('offices:sub_page', kwargs={'office_id': office._id, 'subpage_id': page.slug}) }}">
                         {{ page.preview_text or 'Read more' }}
                     </a>
                     {% endif %}

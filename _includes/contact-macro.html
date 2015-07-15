@@ -44,7 +44,7 @@
                     {%- endif %}
                     <p class="short-desc">
                         <a class="list_link list_link__phone" href="tel:{{ phone.num }}">
-                            {{ format_phone(phone.num) }}
+                            {{ phone.num | format_phone }}
                         </a>
                         {%- if phone.desc %}
                             <span class="micro-copy micro-copy__large">
@@ -60,7 +60,7 @@
                 <span class="cf-icon cf-icon-fax list_icon"></span>
                 <span class="h5 list_text">Fax</span>
                 <p class="short-desc">
-                    {{ format_phone(contact.fax.num) if contact.fax.num }}
+                    {{ contact.fax.num | format_phone if contact.fax.num }}
                 </p>
             </li>
         {%- endif %}
