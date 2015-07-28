@@ -35,6 +35,7 @@
         <a href="/privacy-policy/">See More</a>
     </p>
     <div class="form-group">
+        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
         <input type="hidden" name="code" value="{{ gd_code }}">
         <input class="btn" type="submit" value="Sign up">
     </div>
